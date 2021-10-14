@@ -9,6 +9,7 @@ class Task {
 ///////////////////////////////////// UI CLASS
 
 class UI {
+
     static displayTasks(addTaskToList) {
         const taskList = document.querySelector(".taskList")
         taskList.appendChild(addTaskToList)
@@ -21,6 +22,13 @@ class UI {
         `
         return taskSpan
     }
+    static deleteTask(el) {
+
+        if (el.classList.contains("deleteButton")) {
+            el.parentElement.remove()
+        }
+
+    }
 }
 
 ///////////////////////////////////// EVENT: ADD TASK
@@ -28,11 +36,19 @@ class UI {
 document.querySelector(".form").addEventListener("submit", (e) => {
     e.preventDefault();
    
-    const contentTask = document.querySelector(".input").value
+    //  const contentTask = document.querySelector(".input")
+    let contentTask = document.querySelector(".input").value
    
     const task = new Task(contentTask);
-
    
     UI.displayTasks(UI.addTaskToList(task))
+
+    document.querySelector(".input").value = "";
     
+})
+
+///////////////////////////////////// EVENT: DELETE TASK
+
+document.querySelector(".taskList").addEventListener("click", (e) => {
+    UI.deleteTask(e.target)
 })
