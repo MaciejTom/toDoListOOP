@@ -9,7 +9,7 @@ class Task {
 
 ///////////////////////////////////// UI CLASS
 
-class UI {
+class firebaseHandle {
 
     static displayTasks() {
 
@@ -21,32 +21,30 @@ class UI {
                 })
             });
 
-        //    firebase.database().ref("tasks").once('value'), function(snapshot) {
-        //        console.log(snapshot)
-        //    }
-
-
-
-        // const taskList = document.querySelector(".taskList")
-        // taskList.appendChild(addTaskToList)
+       
+        return ref
     }
     static addTaskToFirebase(task) {
 
         firebase.database().ref("tasks/" + task.contentTask).set({
-            'taskContent': task.contentTask,
-            'id': task.date
+            'taskContent': task.contentTask,           
 
         })
-        // const taskSpan = document.createElement("span")
-        // taskSpan.innerHTML = `
-        // ${task.contentTask} <button class=deleteButton>X</button>
-        // `
-        // return taskSpan
+        
+      
     }
     static deleteTask(el) {
-
+        
         if (el.classList.contains("deleteButton")) {
-            el.parentElement.remove()
+            document.querySelector(".input").value = "";
+            console.log(el.parentElement.textContent)
+            const taskList = document.querySelector(".taskList") 
+            const elSpan = el.parentElement.querySelector("span")
+            console.log(elSpan)
+            taskList.textContent = "";    
+            firebase.database().ref(`tasks/`+ elSpan.textContent).remove()         
+            
+            UI.displayTasks()
         }
 
     }
@@ -56,6 +54,7 @@ class UI {
 
 document.querySelector(".form").addEventListener("submit", (e) => {
     e.preventDefault();
+     const taskList = document.querySelector(".taskList")
     taskList.textContent = ""
     let contentTask = document.querySelector(".input").value
 
@@ -64,7 +63,7 @@ document.querySelector(".form").addEventListener("submit", (e) => {
     UI.addTaskToFirebase(task)
     UI.displayTasks()
     
-    displayTasks()
+   
     document.querySelector(".input").value = "";
 
 })
@@ -75,36 +74,27 @@ document.querySelector(".taskList").addEventListener("click", (e) => {
     UI.deleteTask(e.target)
 })
 
-
-
-
-
-
 const declareData = function (data) {
-    const taskList = document.querySelector(".taskList")
+    const taskList = document.querySelector(".taskList")   
 
-    
+    const taskLi = document.createElement("li");
    
-    let srodekTaska = data.val().taskContent
-    console.log(srodekTaska)
-
-    const taskSpan = document.createElement("span")
-    // taskSpan.innerHTML = `
-    // ${task.contentTask} <button class=deleteButton>X</button>
-    // `
-
-    taskSpan.textContent = srodekTaska
-
-    taskList.appendChild(taskSpan)
+    taskLi.innerHTML = `<span>${data.val().taskContent}</span><button class=deleteButton>X</button>`
+    
+    taskList.appendChild(taskLi)
 
 }
 UI.displayTasks()
 
 
-class ToDoList {
-    constructor() {
-        this.taskList = document.querySelector(".taskList")
-    }
-}
+// class ToDoList {
+//     constructor() {
 
-const toDoList = new ToDoList()
+//         this.taskList = document.querySelector(".taskList")
+        
+//     }
+
+    
+// }
+
+// const toDoList = new ToDoList()
